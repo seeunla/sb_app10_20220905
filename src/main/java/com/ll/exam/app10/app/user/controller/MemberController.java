@@ -4,6 +4,7 @@ import com.ll.exam.app10.app.user.entity.Member;
 import com.ll.exam.app10.app.user.service.MemberServise;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,26 +26,31 @@ public class MemberController {
     @PostMapping("/join")
     @ResponseBody
     public String join(String username, String password, String email, MultipartFile profileImg, HttpSession session) {
-        Member member = memberServise.getMemberByUsername(username);
+        Member oldmember = memberServise.getMemberByUsername(username);
 
-        if (member != null) {
+        if (oldmember != null) {
             return "redirect:/?errorMsg=이미 가입된 회원입니다!";
         }
 
-        Member newmember = memberServise.join(username, "{noop}", email,profileImg);
+        Member member = memberServise.join(username, "{noop}", email,profileImg);
 
         session.setAttribute("loginedMemberId", member.getId());
         return "redirect:/member/profile";
     }
 
     @GetMapping("/profile")
-    public String showProfile(HttpSession session) {
-        Long loginedMemberId = (Long) session.getAttribute("");
-        boolean isLogined = loginedMemberId == null;
+    public String showProfile(HttpSession session, Model model) {
+        Long loginedMemberId = (Long) session.getAttribute("loginedMemberId");
+        boolean isLogined = loginedMemberId != null;
 
         if ( isLogined == false) {
             return "redirect:/?errorMsg=로그인 후 이용해주세요.";
         }
+
+        Member loginedMember = memberServise.getMemberId(loginedMemberId);
+
+        System.out.println(loginedMember);
+        model.addAttribute("loginedMember", loginedMember);
         return "/member/profile";
     }
 }
