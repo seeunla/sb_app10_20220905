@@ -1,6 +1,5 @@
 package com.ll.exam.app10.app.base.entity;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,7 +12,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-
 import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;
