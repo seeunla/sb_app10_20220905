@@ -28,7 +28,7 @@ public class MemberController {
         Member member = memberServise.getMemberByUsername(username);
 
         if (member != null) {
-            return "이미 가입된 회원입니다!";
+            return "redirect:/?errorMsg=이미 가입된 회원입니다!";
         }
 
         Member newmember = memberServise.join(username, "{noop}", email,profileImg);
