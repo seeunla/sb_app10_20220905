@@ -34,9 +34,9 @@ public class MemberService implements UserDetailsService {
 
     public Member join(String username, String password, String email, MultipartFile profileImg) {
         String profileImgRelPath = "member/" + UUID.randomUUID().toString() + ".png";
-        File profileImgFile = new File(genFileDirPath+ "/" + profileImgRelPath);
+        File profileImgFile = new File(genFileDirPath + "/" + profileImgRelPath);
 
-        profileImgFile.mkdirs();
+        profileImgFile.mkdirs(); // 관련된 폴더가 혹시나 없다면 만들어준다.
 
         try {
             profileImg.transferTo(profileImgFile);
@@ -46,8 +46,8 @@ public class MemberService implements UserDetailsService {
 
         Member member = Member.builder()
                 .username(username)
-                .email(email)
                 .password(password)
+                .email(email)
                 .profileImg(profileImgRelPath)
                 .build();
 
@@ -56,8 +56,7 @@ public class MemberService implements UserDetailsService {
         return member;
     }
 
-
-    public Member getMemberId(Long id) {
+    public Member getMemberById(Long id) {
         return memberRepository.findById(id).orElse(null);
     }
 

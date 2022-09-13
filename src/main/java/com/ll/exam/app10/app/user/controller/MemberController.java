@@ -21,29 +21,29 @@ import java.security.Principal;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
-    private final MemberService memberServise;
+    private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
+
     @GetMapping("/join")
     public String showJoin() {
         return "member/join";
     }
 
     @PostMapping("/join")
-    @ResponseBody
-    public String join(HttpServletRequest request, String username, String password, String email, MultipartFile profileImg) {
-        Member oldmember = memberServise.getMemberByUsername(username);
+    public String join(HttpServletRequest req, String username, String password, String email, MultipartFile profileImg) {
+        Member oldMember = memberService.getMemberByUsername(username);
 
         String passwordClearText = password;
         password = passwordEncoder.encode(password);
 
-        if (oldmember != null) {
-            return "redirect:/?errorMsg=이미 가입된 회원입니다!";
+        if (oldMember != null) {
+            return "redirect:/?errorMsg=Already done.";
         }
 
-        Member member = memberServise.join(username, password, email,profileImg);
+        Member member = memberService.join(username, password, email, profileImg);
 
         try {
-            request.login(username, password);
+            req.login(username, passwordClearText);
         } catch (ServletException e) {
             throw new RuntimeException(e);
         }
@@ -54,9 +54,10 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public String showProfile(Principal principal, Model model) {
-        Member loginedMember = memberServise.getMemberByUsername(principal.getName());
+        Member loginedMember = memberService.getMemberByUsername(principal.getName());
 
         model.addAttribute("loginedMember", loginedMember);
-        return "/member/profile";
+
+        return "member/profile";
     }
 }
