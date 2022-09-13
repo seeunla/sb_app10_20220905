@@ -2,7 +2,6 @@ package com.ll.exam.app10.app.user.service;
 
 import com.ll.exam.app10.app.user.entity.Member;
 import com.ll.exam.app10.app.user.repository.MemberRepository;
-import jdk.dynalink.linker.LinkerServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,7 +21,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServise implements UserDetailsService {
+public class MemberService implements UserDetailsService {
 
     @Value("${custom.genFileDirPath}")
     private String genFileDirPath;
@@ -70,5 +69,21 @@ public class MemberServise implements UserDetailsService {
         authorities.add(new SimpleGrantedAuthority("member"));
 
         return new User(member.getUsername(), member.getPassword(), authorities);
+    }
+
+    public Member join(String username, String password, String email) {
+        Member member = Member.builder()
+                .username(username)
+                .password(password)
+                .email(email)
+                .build();
+
+        memberRepository.save(member);
+
+        return member;
+    }
+
+    public long count() {
+        return memberRepository.count();
     }
 }

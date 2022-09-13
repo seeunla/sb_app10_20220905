@@ -1,7 +1,7 @@
 package com.ll.exam.app10.app.user.controller;
 
 import com.ll.exam.app10.app.user.entity.Member;
-import com.ll.exam.app10.app.user.service.MemberServise;
+import com.ll.exam.app10.app.user.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,14 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.security.Principal;
 
 @Controller
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
-    private final MemberServise memberServise;
+    private final MemberService memberServise;
     private final PasswordEncoder passwordEncoder;
     @GetMapping("/join")
     public String showJoin() {
