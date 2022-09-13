@@ -2,6 +2,7 @@ package com.ll.exam.app10;
 
 import com.ll.exam.app10.app.home.controller.HomeController;
 import com.ll.exam.app10.app.user.controller.MemberController;
+import com.ll.exam.app10.app.user.entity.Member;
 import com.ll.exam.app10.app.user.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -106,7 +108,6 @@ public class GenFileServiceTests {
 
     @Test
     @DisplayName("회원가입")
-    @Rollback( false)
     void t5() throws Exception {
         String testUploadUrl = "https://picsum.photos/200/200";
         String originalFileName = "test.png";
@@ -135,6 +136,16 @@ public class GenFileServiceTests {
                 .andDo(print());
         // 5번 회원이 생성되어야 함, 테스트
 
+        resultActions
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/member/profile"))
+                .andExpect(handler().handlerType(MemberController.class))
+                .andExpect(handler().methodName("join"));
 
+        Member member = memberService.getMemberById(5L);
+
+        assertThat(member).isNotNull();
+
+        memberService.removeProfileImg(member);
     }
 }
