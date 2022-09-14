@@ -41,7 +41,7 @@ public class MemberService implements UserDetailsService {
         String fileName = UUID.randomUUID() + "." + ext;
 
         String profileImgDirPath = genFileDirPath + "/" + profileImgDirName;
-        String profileImgFilePath = profileImgDirPath + "/" + fileName;
+        String profileImgFilePath = getCurrentProfileImgDirName();
 
         new File(profileImgDirPath).mkdirs(); // 관련된 폴더가 혹시나 없다면 만들어준다.
 
@@ -99,6 +99,17 @@ public class MemberService implements UserDetailsService {
         member.removeProfileImgOnStorage();
         member.setProfileImg(null);
 
+        memberRepository.save(member);
+    }
+
+    private String getCurrentProfileImgDirName() {
+        return "member/" + Util.date.getCurrentDateFormatted("yyyy_MM_dd");
+    }
+
+
+    public void setProfileImgByUrl(Member member, String url) {
+        String filePath = Util.file.downloadImg(url, genFileDirPath + "/" + getCurrentProfileImgDirName() + "/" + UUID.randomUUID());
+        member.setProfileImg(getCurrentProfileImgDirName() + "/" + new File(filePath).getName());
         memberRepository.save(member);
     }
 }
