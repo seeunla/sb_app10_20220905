@@ -25,11 +25,20 @@ public class MemberController {
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
 
+    @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
     public String showJoin() {
         return "member/join";
     }
 
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/login")
+    public String login() {
+        return "member/login";
+    }
+
+
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
     public String join(HttpServletRequest req, String username, String password, String email, MultipartFile profileImg) {
         Member oldMember = memberService.getMemberByUsername(username);
@@ -63,10 +72,6 @@ public class MemberController {
     }
 
 
-    @GetMapping("/login")
-    public String login() {
-        return "member/login";
-    }
 
     @PostMapping("/login")
     public String login(HttpServletRequest req, String username, String password) {
