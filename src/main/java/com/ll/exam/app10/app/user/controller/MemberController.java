@@ -4,6 +4,7 @@ import com.ll.exam.app10.app.user.entity.Member;
 import com.ll.exam.app10.app.user.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,8 +64,12 @@ public class MemberController {
 
 
     @GetMapping("/login")
-    public String login(Principal principal, Model model) {
+    public String login() {
         return "member/login";
     }
 
+    @PostMapping("/login")
+    public String login(HttpServletRequest req, String username, String password) {
+        return "login_form";
+    }
 }
