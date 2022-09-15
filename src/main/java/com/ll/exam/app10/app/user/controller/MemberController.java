@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -66,13 +67,11 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public String showProfile() {
-        return "member/loginForm";
+        return "member/profile";
     }
 
-
-
-    @PostMapping("/login")
-    public String login(HttpServletRequest req, String username, String password) {
-        return "login_form";
+    @GetMapping("/profile/img/{id}")
+    public String showProfileImg(@PathVariable Long id) {
+        return "redirect:" + memberService.getMemberById(id).getProfileImgUrl();
     }
 }
