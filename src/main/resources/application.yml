@@ -37,4 +37,9 @@ spring:
 custom:
   genFileDirPath: D:/temp/app10
 
+#DEBUG
+logging:
+  level:
+    root: info #가독성을 위해 덜 자세하게 나오게
+    com.ll.exam.app10: debug # 여기 있는 클래스만 debug
 

@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import javax.persistence.SecondaryTable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

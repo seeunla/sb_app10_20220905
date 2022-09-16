@@ -5,7 +5,9 @@ import com.ll.exam.app10.app.security.exception.OAuthTypeMatchNotFoundException;
 import com.ll.exam.app10.app.user.entity.Member;
 import com.ll.exam.app10.app.user.exception.MemberNotFoundException;
 import com.ll.exam.app10.app.user.repository.MemberRepository;
+import com.ll.exam.app10.app.user.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,9 +26,13 @@ import java.util.Map;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class OAuth2UserService extends DefaultOAuth2UserService {
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private MemberService memberService;
 
     @Override
     @Transactional
@@ -44,9 +50,14 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         if (isNew(oauthType, oauthId)) {
             switch (oauthType) {
                 case "KAKAO" -> {
+//                    System.out.println(attributes); // 확인하는 법
+                    log.debug("attributes : " + attributes); // 들어있는 정보 확인하는 법. sout처럼 지우지 않아도 된다.
+
+
                     Map attributesProperties = (Map) attributes.get("properties");
                     Map attributesKakaoAcount = (Map) attributes.get("kakao_account");
                     String nickname = (String) attributesProperties.get("nickname");
+                    String profile_image = (String) attributesProperties.get(("profile_image"));
                     String email = "%s@kakao.com".formatted(oauthId);
                     String username = "KAKAO_%s".formatted(oauthId);
                     if ((boolean) attributesKakaoAcount.get("has_email")) {
@@ -60,6 +71,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                             .build();
 
                     memberRepository.save(member);
+
+                    memberService.setProfileImgByUrl(member, profile_image);
                 }
             }
         } else {
