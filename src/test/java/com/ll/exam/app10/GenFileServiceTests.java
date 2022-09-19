@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -72,11 +73,11 @@ public class GenFileServiceTests {
 
     @Test
     @DisplayName("user1로 로그인 후 프로필페이지에 접속하면 user1의 이메일이 보여야 한다.")
+    @WithUserDetails("user1")
     void t3() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
                         get("/member/profile")
-                                .with(user("user1").password("1234").roles("user"))
                 )
                 .andDo(print());
 
@@ -90,12 +91,12 @@ public class GenFileServiceTests {
 
     @Test
     @DisplayName("user4로 로그인 후 프로필페이지에 접속하면 user4의 이메일이 보여야 한다.")
+    @WithUserDetails("user4")
     void t4() throws Exception {
         // mockMvc로 로그인 처리
         ResultActions resultActions = mvc
                 .perform(
                         get("/member/profile")
-                                .with(user("user4").password("1234").roles("user"))
                 )
                 .andDo(print());
 
