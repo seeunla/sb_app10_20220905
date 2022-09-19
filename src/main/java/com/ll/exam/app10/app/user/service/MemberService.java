@@ -41,6 +41,10 @@ public class MemberService {
     }
 
     private String saveProfileImg(MultipartFile profileImg) {
+        if ( profileImg == null || profileImg.isEmpty() ) {
+            return null;
+        }
+
         String profileImgDirName = "member/" + Util.date.getCurrentDateFormatted("yyyy_MM_dd");
 
         String ext = Util.file.getExt(profileImg.getOriginalFilename());
