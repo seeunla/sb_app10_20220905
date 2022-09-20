@@ -27,6 +27,10 @@ public class Member extends BaseEntity {
     private String password;
     private String profileImg;
 
+    public Member(long id) {
+        super(id);
+    }
+
     public void removeProfileImgOnStorage() {
         if (profileImg == null || profileImg.trim().length() ==0 ) return;
 
