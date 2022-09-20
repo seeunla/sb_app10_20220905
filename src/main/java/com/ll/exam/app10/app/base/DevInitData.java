@@ -1,6 +1,8 @@
 package com.ll.exam.app10.app.base;
 
 
+import com.ll.exam.app10.app.article.entity.Article;
+import com.ll.exam.app10.app.article.service.ArticleService;
 import com.ll.exam.app10.app.user.entity.Member;
 import com.ll.exam.app10.app.user.service.MemberService;
 import org.springframework.boot.CommandLineRunner;
@@ -14,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class DevInitData {
 
     @Bean
-    CommandLineRunner init(MemberService memberService, PasswordEncoder passwordEncoder) {
+    CommandLineRunner init(MemberService memberService, ArticleService articleService, PasswordEncoder passwordEncoder) {
         return args -> {
             String password = passwordEncoder.encode("1234");
 
@@ -23,6 +25,9 @@ public class DevInitData {
 
             Member member2 = memberService.join("user2", password, "user2@test.com");
             memberService.setProfileImgByUrl(member2, "https://picsum.photos/200/300");
+            Article article = articleService.write(member1, "제목", "내용");
+            articleService.addGenFileByUrl(article, "common", "inBody", 1, "https://picsum.photos/200/300");
+            articleService.addGenFileByUrl(article, "common", "inBody", 2, "https://picsum.photos/200/300");
         };
     }
 }
